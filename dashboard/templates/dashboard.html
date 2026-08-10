@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Pipeline Ops Dashboard (Demo)</title>
+  <style>
+    body { font-family: -apple-system, sans-serif; max-width: 900px; margin: 40px auto; padding: 0 20px; color: #222; }
+    h1 { font-size: 1.3rem; }
+    table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+    th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid #ddd; font-size: 0.9rem; }
+    .success { color: #1a7f37; }
+    .failed { color: #cf222e; }
+    .collision { background: #fff8e6; border: 1px solid #eac54f; border-radius: 6px; padding: 10px 14px; margin: 8px 0; font-size: 0.9rem; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; background: #eee; }
+  </style>
+</head>
+<body>
+  <h1>Pipeline Ops Dashboard <span class="badge">demo data</span></h1>
+  <p>Same pattern as the production dashboard this is based on: reads execution history and flags overlapping runs before they cause a downstream rate-limit collision.</p>
+
+  <h2>Schedule collisions ({{ collisions|length }})</h2>
+  {% if collisions %}
+    {% for a, b in collisions %}
+      <div class="collision">⚠ <strong>{{ a.job_name }}</strong> and <strong>{{ b.job_name }}</strong> overlapped ({{ a.started_at }} vs {{ b.started_at }})</div>
+    {% endfor %}
+  {% else %}
+    <p>No overlapping runs detected.</p>
+  {% endif %}
+
+  <h2>Recent executions</h2>
+  <table>
+    <tr><th>Job</th><th>Started</th><th>Finished</th><th>Status</th></tr>
+    {% for e in executions %}
+    <tr>
+      <td>{{ e.job_name }}</td>
+      <td>{{ e.started_at }}</td>
+      <td>{{ e.finished_at }}</td>
+      <td class="{{ e.status }}">{{ e.status }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</body>
+</html>
