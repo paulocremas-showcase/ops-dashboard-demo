@@ -21,7 +21,7 @@ The reason this exists at all: [data-extraction-demo](https://github.com/paulocr
 ## Flow
 
 ```mermaid
-flowchart LR
+flowchart TD
     A[Execution history] --> B[dashboard/app.py]
     B -->|self-join on start/finish time windows| C[Collision list]
     B --> D[Recent runs table]
